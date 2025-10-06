@@ -7,6 +7,7 @@ import { MdCancel } from "react-icons/md";
 function ToDoPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [tasks, setTasks] = useState([])
+  const [editTask, setEditTask] = useState(false)
 
   const addTask = (newTask) => {
     setTasks([newTask, ...tasks])
@@ -39,11 +40,11 @@ function ToDoPage() {
               </button>
             </div>
                 <div>
-                  <TaskForm isFormOpen={isFormOpen} addTask={addTask} />
+                  <TaskForm isFormOpen={isFormOpen} addTask={addTask} editTask={editTask} />
                 </div>
 
                 <div className="space-y-3 text-center">
-                   {tasks.length === 0 ? (<p>No task added Yet</p>) : tasks.map((task)=>(<Taskpanel task={task}/>))}
+                   {tasks.length === 0 ? (<p>No task added Yet</p>) : tasks.map((task, index)=>(<Taskpanel task={task} index={index}  key={task.id} setEditTask={setEditTask} editTask={editTask} />))}
                 </div>
           </div>
         </div>

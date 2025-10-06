@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-function TaskForm({ isFormOpen, addTask }) {
+function TaskForm({ isFormOpen, addTask, editTask }) {
   const today = new Date().toISOString().split("T")[0];
   const [addedTask, setAddedTask] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -17,6 +18,7 @@ function TaskForm({ isFormOpen, addTask }) {
     const newTask = {
       name: addedTask,
       dueDate: dueDate,
+      id: uuidv4(),
     };
     addTask(newTask);
   };
@@ -50,7 +52,7 @@ function TaskForm({ isFormOpen, addTask }) {
           type="submit"
           className="bg-red-500 p-[10px] rounded-[5px] cursor-pointer text-white"
         >
-          Add new task
+          {editTask ? "Save" : "Add New Task"}
         </button>
       </form>
     </div>
