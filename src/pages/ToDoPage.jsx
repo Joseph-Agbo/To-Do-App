@@ -3,13 +3,40 @@ import Taskpanel from "../components/Taskpanel";
 import TaskForm from "../components/TaskForm";
 import { useState } from "react";
 import { MdCancel } from "react-icons/md";
+import { v4 as uuidv4 } from "uuid";
 
 function ToDoPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [tasks, setTasks] = useState([])
-  const [editTask, setEditTask] = useState(false)
+  const [editToDo, setEditToDo] = useState({
+    item: {},
+    edit: false
+  })
+
+  const editTask = (item) =>{
+    setEditToDo({
+      item: item,
+      edit: true
+    })
+  }
+
+  const updateTask = (id, updtask)=>{
+    setTasks(tasks.map((task) => (task.id == id ? (task = updtask) : task)))
+    setEditToDo({
+      item: {},
+      edit: false
+    })
+  }
+
+    const deleteTask = (id) => {
+      setTasks(tasks.filter((task) =>
+        task.id !== id
+      ));
+    }
+   
 
   const addTask = (newTask) => {
+    newTask.id = uuidv4();
     setTasks([newTask, ...tasks])
   }
 
@@ -40,11 +67,11 @@ function ToDoPage() {
               </button>
             </div>
                 <div>
-                  <TaskForm isFormOpen={isFormOpen} addTask={addTask} editTask={editTask} />
+                  <TaskForm isFormOpen={isFormOpen} addTask={addTask} editToDo={editToDo} updateTask={updateTask} />
                 </div>
 
                 <div className="space-y-3 text-center">
-                   {tasks.length === 0 ? (<p>No task added Yet</p>) : tasks.map((task, index)=>(<Taskpanel task={task} index={index}  key={task.id} setEditTask={setEditTask} editTask={editTask} />))}
+                   {tasks.length === 0 ? (<p>No task added Yet</p>) : tasks.map((task, index)=>(<Taskpanel task={task} index={index}  key={task.id} editTask={editTask} deleteTask={deleteTask} />))}
                 </div>
           </div>
         </div>

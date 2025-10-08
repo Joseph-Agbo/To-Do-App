@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState, useEffect } from "react";
 
-function TaskForm({ isFormOpen, addTask, editTask }) {
+
+function TaskForm({ isFormOpen, addTask, editToDo, updateTask }) {
   const today = new Date().toISOString().split("T")[0];
   const [addedTask, setAddedTask] = useState("");
   const [dueDate, setDueDate] = useState("");
+
+  useEffect(()=>{
+    if (editToDo.edit == true) {
+      setAddedTask(editToDo.item.name)
+      setDueDate(editToDo.item.dueDate)
+    }
+  }, [editToDo])
 
   const handleTaskUpdate = (e) => {
     setAddedTask(e.target.value);
@@ -18,9 +25,15 @@ function TaskForm({ isFormOpen, addTask, editTask }) {
     const newTask = {
       name: addedTask,
       dueDate: dueDate,
-      id: uuidv4(),
     };
-    addTask(newTask);
+    if (editToDo.edit) {
+      updateTask(editToDo.item.id, newTask)
+    }else{
+      addTask(newTask);
+    }
+    
+    setAddedTask("")
+    setDueDate("")
   };
 
   return (
@@ -46,13 +59,14 @@ function TaskForm({ isFormOpen, addTask, editTask }) {
             className="outline-2 p-[10px]"
             value={dueDate}
             onChange={handleDueDate}
+            required
           />
         </div>
         <button
           type="submit"
           className="bg-red-500 p-[10px] rounded-[5px] cursor-pointer text-white"
         >
-          {editTask ? "Save" : "Add New Task"}
+          {editToDo.edit ? "Update" : "Add new Task"}
         </button>
       </form>
     </div>
